@@ -35,7 +35,6 @@ url = "https://liangfgithub.github.io/MovieData/ratings.dat?raw=true"
 columns = ["UserID", "MovieID", "Rating", "Timestamp"]
 ratings_df = pd.read_csv(url, sep="::", names=columns, engine="python")
 ratings_df = ratings_df[ratings_df['MovieID'].isin(s_movie_ids)]
-print(ratings_df)
 
 # todo filter ratings by movieID
 
@@ -110,7 +109,6 @@ def myIBCF(newuser, similarity_matrix, popularity_ranking, top_k=10):
     predictions = {}
 
     # Loop over all movies
-    print("SMC", similarity_matrix.columns)
     for movie in similarity_matrix.columns:
         if pd.notna(newuser[movie]):  # Skip if the movie is already rated
             continue
@@ -132,8 +130,6 @@ def myIBCF(newuser, similarity_matrix, popularity_ranking, top_k=10):
     # Sort predictions in descending order
     sorted_predictions = sorted(predictions.items(), key=lambda x: x[1], reverse=True)
     non_na_recommendations = [movie for movie, pred in sorted_predictions if not pd.isna(pred)]
-
-    print("NNR", non_na_recommendations)
 
     # Fallback mechanism for popular movies
     if len(non_na_recommendations) < top_k:
@@ -159,15 +155,11 @@ def get_displayed_movies():
     return filtered_movies
 
 def get_recommended_movies(new_user_ratings):
-    print("Fm", filtered_movies)
-    print(new_user_ratings)
     newuser = pd.Series(data=np.nan, index=S.columns)
     for key in new_user_ratings:
         newuser["m" + str(key)] = new_user_ratings[key]
-    print(newuser)
 
     results = myIBCF(newuser, S, popularity_ranking, 10)
-    print(results)
 
     # Extract movie IDs from results (e.g., "m127" -> 127)
     m_results = [int(r[1:]) for r in results]
@@ -178,8 +170,6 @@ def get_recommended_movies(new_user_ratings):
     # Ensure the result DataFrame is in the same order as m_results
     result['movie_id'] = pd.Categorical(result['movie_id'], categories=m_results, ordered=True)
     result = result.sort_values('movie_id')
-
-    print(result)
     return result
     #return myIBCF(, S, popularity_ranking, 10)
 

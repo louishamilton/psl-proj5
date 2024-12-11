@@ -1,9 +1,6 @@
-logging
-typing
 dash
 dash_bootstrap_components
 pandas
 requests
 numpy
-os
 gunicorn

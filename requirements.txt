@@ -1,0 +1,10 @@
+logging
+typing
+dash
+dash_bootstrap_components
+pandas
+requests
+pickle
+numpy
+os
+gunicorn
